@@ -1,6 +1,11 @@
+import { LinkList } from "@/components/links/link-list";
 import SimpleLinkForm from "@/components/links/simple-link-form";
+import { getBaseURL } from "@/services/config";
+import { Loader2 } from "lucide-react";
+import { Suspense } from "react";
 
-export default function Home() {
+export default async function Home() {
+  const baseUrl = await getBaseURL();
   return (
     <main className="flex flex-col w-full mx-auto px-4 items-center py-24">
       <section className="flex flex-col gap-4 items-center">
@@ -10,6 +15,9 @@ export default function Home() {
         </p>
       </section>
       <SimpleLinkForm />
+      <Suspense fallback={<Loader2 className="animate-spin mt-8" />}>
+        <LinkList baseUrl={baseUrl} />
+      </Suspense>
     </main>
   );
 }

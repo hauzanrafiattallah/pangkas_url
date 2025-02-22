@@ -1,8 +1,8 @@
 "use server";
 
 import { db } from "@/db";
-import { LinkInsertType, linksTable } from "@/db/schema";
-import { eq } from "drizzle-orm";
+import { LinkInsertType, linksTable, LinkType } from "@/db/schema";
+import { desc, eq } from "drizzle-orm";
 import { nanoid } from "nanoid";
 import { createTempUserId, getUserId } from "./users";
 
@@ -38,4 +38,12 @@ export const createSimpleLink = async (link: string) => {
 
 export const createLink = async (param: LinkInsertType) => {
   await db.insert(linksTable).values(param);
+};
+
+export const getLinksByUserId = async (userId: string): Promise<LinkType[]> => {
+  const results = await db.query.linksTable.findMany({
+    where: eq(linksTable.userId, userId),
+    orderBy: [desc(linksTable.createdAt)],
+  });
+  return results;
 };
