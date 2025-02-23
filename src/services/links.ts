@@ -5,6 +5,7 @@ import { LinkInsertType, linksTable, LinkType } from "@/db/schema";
 import { desc, eq } from "drizzle-orm";
 import { nanoid } from "nanoid";
 import { createTempUserId, getUserId } from "./users";
+import { revalidatePath } from "next/cache";
 
 const isSlugExist = async (slug: string) => {
   const result = await db.query.linksTable.findFirst({
@@ -38,6 +39,7 @@ export const createSimpleLink = async (link: string) => {
 
 export const createLink = async (param: LinkInsertType) => {
   await db.insert(linksTable).values(param);
+  revalidatePath("/");
 };
 
 export const getLinksByUserId = async (userId: string): Promise<LinkType[]> => {
