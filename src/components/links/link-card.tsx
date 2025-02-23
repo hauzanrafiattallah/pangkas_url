@@ -8,7 +8,7 @@ import { useMemo } from "react";
 import { CopyButton } from "../ui/copy-button";
 import { toast } from "sonner";
 import { Eye } from "lucide-react";
-// import { LinkCardActions } from "./link-card-actions";
+import { LinkCardActions } from "./link-card-actions";
 
 type Props = {
   link: LinkType;
@@ -20,6 +20,7 @@ export const LinkCard = ({ link, baseUrl }: Props) => {
     const url = new URL(decodeURI(link.link));
     return `https://www.google.com/s2/favicons?sz=64&domain_url=${url.hostname}`;
   }, [link]);
+
   const shortenedUrl = useMemo(() => {
     return `${baseUrl}/${link.slug}`;
   }, [link, baseUrl]);
@@ -27,6 +28,7 @@ export const LinkCard = ({ link, baseUrl }: Props) => {
     const createdAt = new Date(link.createdAt);
     return createdAt.toLocaleString();
   }, [link]);
+
   return (
     <Card className="flex p-3 gap-3">
       <Image
@@ -63,7 +65,7 @@ export const LinkCard = ({ link, baseUrl }: Props) => {
         </Link>
         <div className="text-xs">{date}</div>
       </div>
-      {/* <LinkCardActions link={link} /> */}
+      <LinkCardActions link={link} />
     </Card>
   );
 };
