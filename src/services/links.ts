@@ -13,10 +13,15 @@ const getUserIdOrCreateTemp = async (): Promise<string> => {
   return await createTempUserId();
 };
 
-const isSlugExist = async (slug: string) => {
+export const getLinkBySlug = async (slug: string) => {
   const result = await db.query.linksTable.findFirst({
     where: eq(linksTable.slug, slug),
   });
+  return result;
+};
+
+const isSlugExist = async (slug: string) => {
+  const result = await getLinkBySlug(slug);
   if (result) {
     return true;
   }
@@ -96,4 +101,11 @@ export const deleteLink = async (id: number) => {
     .delete(linksTable)
     .where(and(eq(linksTable.id, id), eq(linksTable.userId, userId)));
   revalidatePath("/");
+};
+
+export const updateLinkCount = async (id: number, count: number) => {
+  await db
+    .update(linksTable)
+    .set({ visitCount: count })
+    .where(eq(linksTable.id, id));
 };

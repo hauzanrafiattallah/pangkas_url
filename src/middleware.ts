@@ -1,16 +1,21 @@
 import { clerkMiddleware } from "@clerk/nextjs/server";
+import { NextRequest, NextResponse } from "next/server";
+import { getLinkBySlug, updateLinkCount } from "./services/links";
 
-// const isPublicRoute = createRouteMatcher([
-//   "/auth/sign-in(.*)",
-//   "/auth/sign-up(.*)",
-//   "/",
-// ]);
+const reddirectionMiddleware = async (req: NextRequest) => {
+  const pathname = decodeURIComponent(req.nextUrl.pathname);
+  if (pathname === "/") return NextResponse.next();
+  const pathSegments = pathname.split("/");
+  if (pathSegments.length > 2) return NextResponse.next();
+  const slug = pathSegments[1];
+  const link = await getLinkBySlug(slug);
+  if (!link) return NextResponse.next();
+  await updateLinkCount(link.id, link.visitCount + 1);
+  return NextResponse.redirect(decodeURIComponent(link.link));
+};
 
-
-export default clerkMiddleware(async () => {
-  // if (!isPublicRoute(request)) {
-  //   await auth.protect();
-  // }
+export default clerkMiddleware(async (auth, req) => {
+  return await reddirectionMiddleware(req);
 });
 
 export const config = {
