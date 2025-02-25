@@ -2,7 +2,7 @@
 
 import { db } from "@/db";
 import { LinkInsertType, linksTable, LinkType } from "@/db/schema";
-import { and, desc, eq, param } from "drizzle-orm";
+import { and, desc, eq } from "drizzle-orm";
 import { nanoid } from "nanoid";
 import { createTempUserId, getUserId } from "./users";
 import { revalidatePath } from "next/cache";

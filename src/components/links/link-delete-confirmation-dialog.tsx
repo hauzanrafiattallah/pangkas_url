@@ -35,6 +35,7 @@ export const LinkDeleteConfirmationDialog = ({
       onOpenChange(false);
       toast("Link berhasil dihapus");
     } catch (error) { 
+      console.log(error);
       toast("Link gagal di hapus");
     } finally {
       setIsDeleting(false);
